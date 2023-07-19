@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.Office.Interop.Word;
+using System.Runtime.InteropServices;
+ 
+namespace WindowsFormsApplication1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+ 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+ 
+        }
+        string path = openFileDialog1.FileName;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+            
+            
+            
+            Microsoft.Office.Interop.Word.Application my_app = new Microsoft.Office.Interop.Word.Application();
+            Microsoft.Office.Interop.Word.Document my_doc = my_app.Documents.Open(path);
+            
+            int words_count = my_doc.Words.Count;
+            for (int i = 1; i < words_count; i++)
+            {
+                string my_words = my_doc.Words[i].Text;
+                richTextBox1.Text += "\n" + my_words;
+            }
+ 
+            my_app.Quit();
+ 
+        }
+ 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Microsoft.Office.Interop.Word.Application my_app = new Microsoft.Office.Interop.Word.Application();
+            Microsoft.Office.Interop.Word.Document my_doc = my_app.Documents.Open(path);
+ 
+ 
+        }
+    }
+}

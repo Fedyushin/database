@@ -1,0 +1,148 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+ 
+namespace WindowsFormsApplication1
+{
+    public partial class Employees_IUD : Form
+    {
+        public Employees_IUD()
+        {
+            InitializeComponent();
+        }
+ 
+        SqlConnection conn = new SqlConnection("Data Source=AK-ITLAB-73\\SQLEXPRESS;Initial Catalog=ProjectManagement;User ID=student;Password=Qwerty123");
+        
+        private void Employees_IUD_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'projectManagementDataSet.Employees' table. You can move, or remove it, as needed.
+            this.employeesTableAdapter.Fill(this.projectManagementDataSet.Employees);
+ 
+        }
+        public void list()
+        {
+ 
+            SqlCommand cmd = new SqlCommand("select * from employees", conn);
+ 
+            DataTable tbl_employees = new DataTable();
+ 
+            conn.Open();
+ 
+            SqlDataReader read = cmd.ExecuteReader();
+ 
+            tbl_employees.Load(read);
+ 
+            conn.Close();
+ 
+            dataGridView1.DataSource = tbl_employees;
+ 
+            //dataGridView1.Columns[0].Visible = false;
+ 
+            dataGridView1.ReadOnly = true;
+ 
+        }
+ 
+               private void button1_Click(object sender, EventArgs e)
+        {
+            SqlCommand cmd = new SqlCommand("insert into Employees values (@employee_id, @employee_name, @employee_surname, @employee_number, @employee_email, @employee_address, @employee_gender, @employee_job)", conn);
+ 
+            conn.Open();
+ 
+            cmd.Parameters.AddWithValue("@employee_id", textBox1.Text);
+ 
+            cmd.Parameters.AddWithValue("@employee_name", textBox2.Text);
+ 
+            cmd.Parameters.AddWithValue("@employee_surname", textBox3.Text);
+ 
+            cmd.Parameters.AddWithValue("@employee_number", textBox4.Text);
+ 
+            cmd.Parameters.AddWithValue("@employee_email", textBox5.Text);
+ 
+            cmd.Parameters.AddWithValue("@employee_address", textBox6.Text);
+ 
+            cmd.Parameters.AddWithValue("@employee_gender", textBox7.Text);
+ 
+            cmd.Parameters.AddWithValue("@employee_job", textBox8.Text);
+ 
+            cmd.ExecuteNonQuery();
+ 
+            conn.Close();
+ 
+            MessageBox.Show("Information has been added successfully!");
+ 
+            textBox1.Clear();
+ 
+            textBox2.Clear();
+ 
+            textBox3.Clear();
+ 
+            textBox4.Clear();
+ 
+            textBox5.Clear();
+ 
+            textBox6.Clear();
+ 
+            textBox7.Clear();
+ 
+            textBox8.Clear();
+ 
+            list();
+        }
+ 
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+           
+        }
+ 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SqlCommand cmd = new SqlCommand("update Employees set employee_name=@employee_name, employee_surname=@employee_surname, employee_number=@employee_number, employee_email=@employee_email, employee_address=@employee_address, employee_gender=@employee_gender, employee_job=@employee_job where employee_id=@employee_id", conn);
+            conn.Open();
+            cmd.Parameters.AddWithValue("@employee_id", textBox1.Text);
+            cmd.Parameters.AddWithValue("@employee_name", textBox2.Text);
+            cmd.Parameters.AddWithValue("@employee_surname", textBox3.Text);
+            cmd.Parameters.AddWithValue("@employee_number", textBox4.Text);
+            cmd.Parameters.AddWithValue("@employee_email", textBox5.Text);
+            cmd.Parameters.AddWithValue("@employee_address", textBox6.Text);
+            cmd.Parameters.AddWithValue("@employee_gender", textBox7.Text);
+            cmd.Parameters.AddWithValue("@employee_job", textBox8.Text);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            MessageBox.Show("Information has been updated successfully!");
+            list();
+        }
+           
+            private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+            {
+                if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+                    dataGridView1.CurrentRow.Selected = true;
+                textBox1.Text = dataGridView1.Rows[e.RowIndex].Cells[0].FormattedValue.ToString();
+                textBox2.Text = dataGridView1.Rows[e.RowIndex].Cells[1].FormattedValue.ToString();
+                textBox3.Text = dataGridView1.Rows[e.RowIndex].Cells[2].FormattedValue.ToString();
+                textBox4.Text = dataGridView1.Rows[e.RowIndex].Cells[3].FormattedValue.ToString();
+                textBox5.Text = dataGridView1.Rows[e.RowIndex].Cells[4].FormattedValue.ToString();
+                textBox6.Text = dataGridView1.Rows[e.RowIndex].Cells[5].FormattedValue.ToString();
+                textBox7.Text = dataGridView1.Rows[e.RowIndex].Cells[6].FormattedValue.ToString();
+                textBox8.Text = dataGridView1.Rows[e.RowIndex].Cells[7].FormattedValue.ToString();
+            }
+            private void button3_Click(object sender, EventArgs e)
+            {
+                SqlCommand cmd = new SqlCommand("delete Employees where employee_id=@employee_id", conn);
+                conn.Open();
+                cmd.Parameters.AddWithValue("@employee_id", int.Parse(textBox1.Text));
+                cmd.ExecuteNonQuery();
+                conn.Close();
+                MessageBox.Show("Information has been deleted successfully!");
+                list();
+ 
+            }
+ 
+        }
+    }
